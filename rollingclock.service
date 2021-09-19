@@ -1,0 +1,15 @@
+[Unit]
+    Description=rollingclock
+    After=network.target
+
+    [Service]
+    ExecStartPre=/bin/sleep 30
+    ExecStart=/usr/bin/python3 -u /home/pi/python/RollingClockTicker.py
+    WorkingDirectory=/home/pi/python
+    StandardOutput=inherit
+    StandardError=inherit
+    Restart=always
+    User=pi
+
+    [Install]
+    WantedBy=multi-user.target
