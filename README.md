@@ -1,7 +1,7 @@
 # LED-Matrix-RollingClock
 LED-Matrix RollingClock with Python and a Raspberry PI
 
-www.intermario.de/led-matrix-uhr
+http://www.intermario.de/led-matrix-uhr
 
 Original from: http://tritrip.de/2021/01/01/led-matrix-uhr/
 
