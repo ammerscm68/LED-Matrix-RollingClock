@@ -133,6 +133,7 @@ class Holidays:
             self.get_three_kings(state_code)
             self.get_assumption_day(state_code)
             self.get_reformation_day(state_code)
+            self.get_world_children_day(state_code)
             self.get_all_saints_day(state_code)
             self.get_repentance_and_prayer_day(state_code)
             self.get_corpus_christi(state_code)
@@ -295,6 +296,13 @@ class Holidays:
         if state_code in valid:
             reformation_day = datetime.date(self.year, 10, 31)
             self.holiday_list.append([reformation_day, u'Reformationstag'])
+            
+    def get_world_children_day(self, state_code):
+        """ Weltkindertag """
+        valid = ['TH']
+        if state_code in valid:
+            worldchildren_day = datetime.date(self.year, 9, 20)
+            self.holiday_list.append([worldchildren_day, u'Weltkindertag'])        
 
     def get_all_saints_day(self, state_code):
         """ Allerheiligen """
