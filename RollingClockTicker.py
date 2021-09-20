@@ -231,6 +231,8 @@ if __name__ == "__main__":
     # Geburtstagsgruß Datum
     DateOfBirth = "07.03"
     
+    HDBL = "" # Feiertags Bundesland --> keine Angabe gibt nur die bundeseinheitlichen Feiertage aus (Bundesländer siehe unten) 
+    
     AlertMaxCPUTemp = 70 # Alarm-Anzeige bei Temperatur von X Grad oder höher der CPU
     
     NewsTrigger = 15 # Nach X sekunden (von 1 Minute) - Prüfen auf vorhandene News
@@ -256,9 +258,9 @@ if __name__ == "__main__":
     
     # CountDown Daten
     CDEventYear = 2099 # Jahr des Events
-    CDEventMonth = 1 # Monat des Events
+    CDEventMonth = 9 # Monat des Events
     CDEventDay = 1 # Tag des Events
-    CDEventText = "CountDown Event" # Text für den CountDown
+    CDEventText = "EventText" # Text für den CountDown
     CDEventViewCount = -1 # alle X Minuten wird der CountDown-Zähler angezeigt (-1 = CountDown deaktiviert)
     
     # ********************************************************************************************************
@@ -427,9 +429,14 @@ if __name__ == "__main__":
         print("--------------------")
         print("Displaystart: Dunkel")
         print("--------------------")
-        
-    HDBL = "TH" # Feiertags Bundesland --> z.Bsp. "TH" für Thüringen (weitere Bundesländer siehe unten) 
+         
     THoliDay = RollingClock.HolidayText(HDBL) # Ermitteln ob Feiertag beim Programmstart
+    if THoliDay != "":
+        print("")
+        print("--------------------------------------")
+        print("Heute ist Feiertag: "+THoliDay)
+        print("--------------------------------------")
+    
     print("")
     print("-----------------------")
     print("CPU-Temperatur: "+str(RollingClock.Measure_CPU_Temp())+" Grad")
@@ -511,18 +518,23 @@ if __name__ == "__main__":
        VCountDownTextOut = Uhr.CountDown(CDEventYear, CDEventMonth, CDEventDay, CDEventText)
        if VCountDownTextOut != "-1":
         if VCountDownTextOut == "Fail":
+          print("")  
           print("-------------------------------------------------------------------------")
           print("Textausgabe in Kommandozeile - ungültige Datumsangabe im CountDown Zähler")
           print("-------------------------------------------------------------------------")
+          print("")
         else:  
           print("")
           print("------------------------------------------------------------------------------------")
           print("CountDown: "+VCountDownTextOut)
           print("------------------------------------------------------------------------------------")
+          print("")
        else:
+          print("") 
           print("-------------------------------------------------------------")
           print("Textausgabe in Kommandozeile - Der CountDown ist abgelaufen !")
-          print("-------------------------------------------------------------") 
+          print("-------------------------------------------------------------")
+          print("")
     
     # Uhr Ausblenden oder nicht
     if HideClockTimeHour != "-1": 

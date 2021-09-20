@@ -524,9 +524,10 @@ def HolidayText(country_code):
         holidays = hl.get_holiday_list()
         hdt = ""
         for h in holidays:
-            #print(h[0],h[1]) # Ausgabe Liste aller Feiertage zum Testen
+            # print(h[0],h[1]) # Ausgabe Liste aller Feiertage zum Testen
             if hdd == h[0].strftime('%Y-%m-%d'):
                hdt = h[1]
+               # print("FT: "+hdt) 
         return hdt
     
 def Measure_CPU_Temp():
@@ -568,7 +569,7 @@ if __name__ == "__main__":
     # wenn PushButton nicht vorhanden "NotActive" = deaktiviert  -  Wenn PushButton vorhanden "Active" = aktiviert)
     
     # weitere Einstellungen 
-    HideClockTimeHour = "-1" # ab hier Uhr ausblenden (Stunde Uhrzeit --> ohne führende Null)   -->  -1  = Uhr nicht Ausblenden
+    HideClockTimeHour = "23" # ab hier Uhr ausblenden (Stunde Uhrzeit --> ohne führende Null)   -->  -1  = Uhr nicht Ausblenden
     ShowClockTimeHour = "6" # ab hier Uhr wieder anzeigen (Stunde Uhrzeit --> ohne führende Null)
     
     # Anzeigehelligkeit 
@@ -577,6 +578,8 @@ if __name__ == "__main__":
     
     # Geburtstagsgruß Datum
     DateOfBirth = "07.03"
+    
+    HDBL = "" # Feiertags Bundesland --> keine Angabe gibt nur die bundeseinheitlichen Feiertage aus (Bundesländer siehe unten) 
     
     AlertMaxCPUTemp = 70 # Alarm-Anzeige bei Temperatur von X Grad oder höher der CPU
     
@@ -601,7 +604,7 @@ if __name__ == "__main__":
     CDEventYear = 2099 # Jahr des Events
     CDEventMonth = 1 # Monat des Events
     CDEventDay = 1 # Tag des Events
-    CDEventText = "Event" # Text für den CountDown
+    CDEventText = "EventText" # Text für den CountDown
     CDEventViewCount = -1 # alle X Minuten wird der CountDown-Zähler angezeigt (-1 = CountDown deaktiviert)
     
     # ********************************************************************************************************
@@ -679,8 +682,13 @@ if __name__ == "__main__":
         print("Displaystart: Dunkel")
         print("--------------------")
     
-    HDBL = "" # Feiertags Bundesland --> keine Angabe gibt nur die bundeseinheitlichen Feiertage aus (Bundesländer siehe unten) 
     THoliDay = HolidayText(HDBL) # Ermitteln ob Feiertag beim Programmstart
+    if THoliDay != "":
+        print("")
+        print("----------------------------------------")
+        print("Heute ist Feiertag: "+THoliDay)
+        print("----------------------------------------")
+    
     print("")
     print("-----------------------")
     print("CPU-Temperatur: "+str(Measure_CPU_Temp())+" Grad")
@@ -691,12 +699,10 @@ if __name__ == "__main__":
         print("------------------------------------")
         print("Ausrichtung der Uhrzeitanzeige: oben")
         print("------------------------------------")
-        print("")
     else:
         print("-------------------------------------")
         print("Ausrichtung der Uhrzeitanzeige: unten")
         print("-------------------------------------")
-        print("")
         
     if HideClockTimeHour != "-1":
        print("")
@@ -760,18 +766,23 @@ if __name__ == "__main__":
        VCountDownTextOut = Uhr.CountDown(CDEventYear, CDEventMonth, CDEventDay, CDEventText)
        if VCountDownTextOut != "-1":
         if VCountDownTextOut == "Fail":
+          print("") 
           print("-------------------------------------------------------------------------")
           print("Textausgabe in Kommandozeile - ungültige Datumsangabe im CountDown Zähler")
           print("-------------------------------------------------------------------------")
+          print("")
         else:  
           print("")
           print("------------------------------------------------------------------------------------")
           print("CountDown: "+VCountDownTextOut)
           print("------------------------------------------------------------------------------------")
+          print("")
        else:
+          print("") 
           print("-------------------------------------------------------------")
           print("Textausgabe in Kommandozeile - Der CountDown ist abgelaufen !")
-          print("-------------------------------------------------------------") 
+          print("-------------------------------------------------------------")
+          print("")
                 
     # Uhr Ausblenden oder nicht
     if HideClockTimeHour != "-1":

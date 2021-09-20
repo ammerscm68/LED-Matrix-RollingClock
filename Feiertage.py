@@ -358,6 +358,6 @@ class Holidays:
         easter_day = datetime.date(self.year, month, day)
         return easter_day
 
-#holidays = Holidays(2021, 'TH')
-#liste = holidays.get_holiday_list()
-#print(liste)
+# holidays = Holidays(2021, 'TH')
+# liste = holidays.get_holiday_list()
+# print(liste)
