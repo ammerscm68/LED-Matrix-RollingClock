@@ -9,6 +9,7 @@ import feedparser
 import requests
 import RollingClock
 import sys, signal
+import imaplib
 #import json, urllib.request
 from re import sub
 from datetime import date, datetime
@@ -146,6 +147,17 @@ def BadWeatherNews(URL): # https://wettwarn.de/wettwarn_wetterwarnungen/warnregi
         BadWeatherNewsText = "Keine Unwetterwarnungen ???"
     return sub('[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890()?=/.%&:!, -]', '', BadWeatherNewsText)
 
+def UnreadMailCount(Servername, UserName, Password):
+ try:
+    mail = imaplib.IMAP4_SSL(Servername)
+    mail.login(UserName, Password)
+    mail.select("inbox", True) # connect to inbox.
+    return_code, mail_ids = mail.search(None, 'UnSeen')
+    count = len(mail_ids[0].split())
+ except:
+    count = -1
+ return count   
+
 def TelegramNews(): # Daten von Chat-App "Telegram" holen und Anzeigen
    try:
     botToken = TelegramAPIKey # "BOT-Token" des erstellten BOT's
@@ -258,10 +270,31 @@ if __name__ == "__main__":
     
     # CountDown Daten
     CDEventYear = 2099 # Jahr des Events
-    CDEventMonth = 9 # Monat des Events
+    CDEventMonth = 1 # Monat des Events
     CDEventDay = 1 # Tag des Events
-    CDEventText = "EventText" # Text für den CountDown
+    CDEventText = "Event Text" # Text für den CountDown
     CDEventViewCount = -1 # alle X Minuten wird der CountDown-Zähler angezeigt (-1 = CountDown deaktiviert)
+    
+    # **** Prüfung auf ungelesene E-Mail Nachrichten ****
+    CurrentMailCheckInterval = -1 # Prüfung alle X Minuten  -1 = Prüfung aller Konten deaktiviert
+    # 1. Konto
+    CheckMode1 = "off" # on = aktiviert  off = deaktiviert
+    MailAccountName1 = "" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar - z.Bsp. Info-Konto (kein @-Zeichen verwenden)
+    MailServername1 = "" # IMAP Servername
+    MailUserName1 = "" # Benutzername Konto 1
+    MailPassword1 = "" # Passwort Konto 1
+    # 2. Konto
+    CheckMode2 = "off" # on = aktiviert  off = deaktiviert
+    MailAccountName2 = "" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar z.Bsp. Kontakt-Konto (kein @-Zeichen verwenden)
+    MailServername2 = "" # IMAP Servername
+    MailUserName2 = "" # Benutzername Konto 2
+    MailPassword2 = "" # Passwort Konto 2
+    # 3. Konto
+    CheckMode3 = "off" # on = aktiviert  off = deaktiviert
+    MailAccountName3 = "" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar z.Bsp. Bestellung-Konto (kein @-Zeichen verwenden)
+    MailServername3 = "" # IMAP Servername
+    MailUserName3 = "" # Benutzername Konto 3
+    MailPassword3 = "" # Passwort Konto 3
     
     # ********************************************************************************************************
     # ********************************************************************************************************
@@ -277,13 +310,18 @@ if __name__ == "__main__":
     LMC = ""
     SRT = ""
     ShowClockTime = ""
+    MailText = ""
     ClockHide = False
     AlertCPUTemp = False
     WetterCounter = TriggerWeatherData + 1
     DayCounter = CurrentDateTimeCounter + 1
+    MailCheckInterval = CurrentMailCheckInterval + 1
     PlausiCheck = 0
     GetWeatherData = False
     CDEventViewCounter = 0
+    MailCount1 = 0
+    MailCount2 = 0
+    MailCount3 = 0
     
     # Plausi-Check
     try: 
@@ -322,12 +360,27 @@ if __name__ == "__main__":
         ShowClockTimeHour = "6" # Default
         HideClockTimeHour = "23" # Default
         PlausiCheck = PlausiCheck + 1
+     # E-Mail Unread MessageCount Check   
+     if MailCheckInterval > -1:   
+         if (CheckMode1 == "on") and (MailServername1 == "" or MailUserName1 == "" or MailPassword1 == ""):
+             CheckMode1 = "off"
+         if (CheckMode2 == "on") and (MailServername2 == "" or MailUserName2 == "" or MailPassword2 == ""):
+             CheckMode2 = "off"
+         if (CheckMode3 == "on") and (MailServername3 == "" or MailUserName3 == "" or MailPassword3 == ""):
+             CheckMode3 = "off"
+         if MailAccountName1 == "":
+            MailAccountName1 = "E-Mail Konto 1"
+         if MailAccountName2 == "":
+            MailAccountName2 = "E-Mail Konto 2"
+         if MailAccountName3 == "":
+            MailAccountName3 = "E-Mail Konto 3"   
     except:
         HideClockTimeHour = "-1" # Default Ausgeschaltet
         ShowClockTimeHour = "6"  # Default
         CPUCheckTrigger = 59 # Default
         NewsTrigger = 15 # Default
         PlausiCheck = PlausiCheck + 1
+        MailCheckInterval = -1 # E-Mail Unread MessageCount Check deaktiviert
           
     # Main
     ClockStop= False
@@ -550,9 +603,9 @@ if __name__ == "__main__":
                 Uhr.SpecialText("Bis",4)
                 Uhr.SpecialText("Bald...",1)
                
-    try:
-     signal.signal(signal.SIGINT, signal_handler)
-     while not ClockStop:
+    #try:
+    signal.signal(signal.SIGINT, signal_handler)
+    while not ClockStop:
             datum = datetime.now().strftime('%d.%m.%Y')
             SpecialDat = datetime.now().strftime('%d.%m')
             FullTime = datetime.now().strftime('%H:%M:%S')
@@ -865,7 +918,7 @@ if __name__ == "__main__":
                         print("Textausgabe in Kommandozeile - ungültige Datumsangabe im CountDown Zähler")
                         print("-------------------------------------------------------------------------")
                       else:  
-                        Uhr.ShowText(CountDownTextOut) # CountDown jetzt ausgeben
+                        Uhr.ShowText("+++ "+CountDownTextOut+" +++") # CountDown jetzt ausgeben
                      else:
                         print("-------------------------------------------------------------")
                         print("Textausgabe in Kommandozeile - Der CountDown ist abgelaufen !")
@@ -949,15 +1002,54 @@ if __name__ == "__main__":
                         Uhr.SpecialText("+++ "+THoliDay+" +++ ",-1)
                         Uhr.Show() # Uhr Einblenden
                         ClockHide= False
+                        
+                # Prüfung auf ungelesene E-Mails
+                if CurrentMailCheckInterval > -1:
+                  MailCheckInterval = MailCheckInterval - 1
+                  print("--------------------------------------------------------------------------------------")
+                  print("Textausgabe in Kommandozeile - Anzeige der Anzahl ungelesener E-Mails in "+str(MailCheckInterval)+" Minute(n)") # Anzeige auf Kommandozeile zu Kontrolle
+                  print("--------------------------------------------------------------------------------------")
+                  if MailCheckInterval == 0:
+                      MailCheckInterval = CurrentMailCheckInterval + 1
+                      if CheckMode1 == "on":
+                         MailCount1 = UnreadMailCount(MailServername1, MailUserName1, MailPassword1)
+                         MailText
+                      else:
+                         MailCount1 = -1 
+                      if CheckMode2 == "on":
+                         MailCount2 = UnreadMailCount(MailServername2, MailUserName2, MailPassword2)
+                      else:
+                         MailCount2 = -1  
+                      if CheckMode3 == "on":
+                         MailCount3 = UnreadMailCount(MailServername3, MailUserName3, MailPassword3)
+                      else:
+                         MailCount3 = -1
+                         
+                      if MailCount1 > 0 or MailCount2 > 0 or MailCount3 > 0:
+                       MailText = "+++ Anzahl ungelesene E-Mail Nachrichten:  "   
+                       if MailCount1 > -1:
+                        MailText = MailText+MailAccountName1+" = "+str(MailCount1)
+                       if MailCount2 > -1:
+                        MailText = MailText+"     "+MailAccountName2+" = "+str(MailCount2)
+                       if MailCount3 > -1:
+                        MailText = MailText+"     "+MailAccountName3+" = "+str(MailCount3)
+                       Uhr.ShowText(MailText+" +++") 
+                      else:
+                         print("")
+                         print("------------------------------------------------------------------------------")
+                         print("Textausgabe in Kommandozeile - Keine ungelesenen E-Mail Nachrichten vorhanden ") # Anzeige auf Kommandozeile zu Kontrolle
+                         print("------------------------------------------------------------------------------")
+                         print("")
+                         Uhr.ShowText("+++ Keine ungelesenen E-Mail Nachrichten vorhanden. +++")
              else:
                print("Textausgabe - *** Internetstatus: Offline *** ")  
                Uhr.ShowText("+++ Internetstatus: Offline +++")
             
             time.sleep(1)
-    except BaseException:#KeyboardInterrupt:
-        pass
-        GPIO.cleanup()  
-        sys.exit()
+    #except BaseException:#KeyboardInterrupt:
+        #pass
+        #GPIO.cleanup()  
+        #sys.exit()
     
 # +++ Feiertage +++   
 #"""Bundesländer Deutschland"""
