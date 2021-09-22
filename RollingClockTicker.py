@@ -10,7 +10,8 @@ import requests
 import RollingClock
 import sys, signal
 import imaplib
-#import json, urllib.request
+from fritzconnection.lib.fritzcall import FritzCall # pip3 install fritzconnection
+import json, urllib.request
 from re import sub
 from datetime import date, datetime
 import RPi.GPIO as GPIO
@@ -34,15 +35,15 @@ def signal_handler(signal, stackframe):
     print("Uhr gestoppt")
     sys.exit()    
 
-#def ReadYoutubeSubscriberCounter():
-    #try:
-        #url = "https://www.googleapis.com/youtube/v3/channels?part=statistics&id=___YOUTUBE-KANAL-ID___&key=___GOOGLE-API-KEY___"
-        #res = urllib.request.urlopen(url).read().decode('utf-8')
-        #data = json.loads(res)
-        #SubscriberText = data['items'][0]['statistics']['subscriberCount']
-    #except:
-        #SubscriberText = "???"
-    #return "Mario's Kanal: " + SubscriberText + " Abonnenten"
+def ReadYoutubeSubscriberCounter():
+    try:
+        url = "https://www.googleapis.com/youtube/v3/channels?part=statistics&id=___YOUTUBE-KANAL-ID___&key=___GOOGLE-API-KEY___"
+        res = urllib.request.urlopen(url).read().decode('utf-8')
+        data = json.loads(res)
+        SubscriberText = data['items'][0]['statistics']['subscriberCount']
+    except:
+        SubscriberText = "???"
+    return "Mario's Kanal: " + SubscriberText + " Abonnenten"
 
 def ReadNews():
     try:
@@ -146,6 +147,18 @@ def BadWeatherNews(URL): # https://wettwarn.de/wettwarn_wetterwarnungen/warnregi
     except:
         BadWeatherNewsText = "Keine Unwetterwarnungen ???"
     return sub('[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890()?=/.%&:!, -]', '', BadWeatherNewsText)
+
+def FritzBoxMissedCallCount(IP,FB_Password):
+    try:
+        fc = FritzCall(address=IP, password=FB_Password)
+        calls = fc.get_missed_calls(update=True, num=None, days=1) # Liste der verpassten Anrufe von heute und gestern
+        # calls = fc.get_missed_calls(update=True, num=None, days=None) # Liste aller verpassten Anrufe
+        CallCount = 0
+        for call in calls:
+           CallCount = CallCount +1
+    except:
+        CallCount = -1 
+    return CallCount
 
 def UnreadMailCount(Servername, UserName, Password):
  try:
@@ -276,25 +289,31 @@ if __name__ == "__main__":
     CDEventViewCount = -1 # alle X Minuten wird der CountDown-Zähler angezeigt (-1 = CountDown deaktiviert)
     
     # **** Prüfung auf ungelesene E-Mail Nachrichten ****
-    CurrentMailCheckInterval = -1 # Prüfung alle X Minuten  -1 = Prüfung aller Konten deaktiviert
+    CurrentMailCheckInterval = -1 # Prüfung alle X Minuten  -1 = Prüfung aller Konten deaktiviert - Empfehlung: 15
     # 1. Konto
     CheckMode1 = "off" # on = aktiviert  off = deaktiviert
-    MailAccountName1 = "" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar - z.Bsp. Info-Konto (kein @-Zeichen verwenden)
+    MailAccountName1 = "Konto 1" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar - z.Bsp. Info-Konto (kein @-Zeichen verwenden)
     MailServername1 = "" # IMAP Servername
     MailUserName1 = "" # Benutzername Konto 1
     MailPassword1 = "" # Passwort Konto 1
     # 2. Konto
     CheckMode2 = "off" # on = aktiviert  off = deaktiviert
-    MailAccountName2 = "" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar z.Bsp. Kontakt-Konto (kein @-Zeichen verwenden)
+    MailAccountName2 = "Konto 2" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar z.Bsp. Kontakt-Konto (kein @-Zeichen verwenden)
     MailServername2 = "" # IMAP Servername
     MailUserName2 = "" # Benutzername Konto 2
     MailPassword2 = "" # Passwort Konto 2
     # 3. Konto
     CheckMode3 = "off" # on = aktiviert  off = deaktiviert
-    MailAccountName3 = "" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar z.Bsp. Bestellung-Konto (kein @-Zeichen verwenden)
+    MailAccountName3 = "Konto 3" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar z.Bsp. Bestellung-Konto (kein @-Zeichen verwenden)
     MailServername3 = "" # IMAP Servername
     MailUserName3 = "" # Benutzername Konto 3
     MailPassword3 = "" # Passwort Konto 3
+    
+    # Anzahl verpasster Anrufe über eine FritzBox
+    CheckMissedFBCalls = "off" # on = aktiviert  off = deaktiviert
+    FritzBoxIP = "192.168.178.1" # Default ist "192.168.178.1"
+    FritzBoxPassword = "" # Fritzbox Passwort
+    CurrentFBCheckInterval = 10 # Prüfung auf verpasste Anrufe alle X Minuten 
     
     # ********************************************************************************************************
     # ********************************************************************************************************
@@ -316,12 +335,14 @@ if __name__ == "__main__":
     WetterCounter = TriggerWeatherData + 1
     DayCounter = CurrentDateTimeCounter + 1
     MailCheckInterval = CurrentMailCheckInterval + 1
+    FBCheckInterval = CurrentFBCheckInterval + 1
     PlausiCheck = 0
     GetWeatherData = False
     CDEventViewCounter = 0
     MailCount1 = 0
     MailCount2 = 0
     MailCount3 = 0
+    MissedCallCount = 0
     
     # Plausi-Check
     try: 
@@ -373,7 +394,14 @@ if __name__ == "__main__":
          if MailAccountName2 == "":
             MailAccountName2 = "E-Mail Konto 2"
          if MailAccountName3 == "":
-            MailAccountName3 = "E-Mail Konto 3"   
+            MailAccountName3 = "E-Mail Konto 3"
+     else:
+         CheckMode1 = "off"
+         CheckMode2 = "off"
+         CheckMode3 = "off"
+     # Fritzbox verpasste Anrufe    
+     if CurrentFBCheckInterval < 1:
+        CheckMissedFBCalls = "off"    
     except:
         HideClockTimeHour = "-1" # Default Ausgeschaltet
         ShowClockTimeHour = "6"  # Default
@@ -381,7 +409,8 @@ if __name__ == "__main__":
         NewsTrigger = 15 # Default
         PlausiCheck = PlausiCheck + 1
         MailCheckInterval = -1 # E-Mail Unread MessageCount Check deaktiviert
-          
+        CheckMissedFBCalls = "off" # Prüfung auf verpasste Anrufe deaktiviert
+        
     # Main
     ClockStop= False
     Uhr = RollingClock.RollingClock() # Uhr Initialisieren
@@ -1026,7 +1055,7 @@ if __name__ == "__main__":
                          MailCount3 = -1
                          
                       if MailCount1 > 0 or MailCount2 > 0 or MailCount3 > 0:
-                       MailText = "+++ Anzahl ungelesene E-Mail Nachrichten:  "   
+                       MailText = "+++ Anzahl ungelesener E-Mail Nachrichten:  "   
                        if MailCount1 > -1:
                         MailText = MailText+MailAccountName1+" = "+str(MailCount1)
                        if MailCount2 > -1:
@@ -1040,7 +1069,29 @@ if __name__ == "__main__":
                          print("Textausgabe in Kommandozeile - Keine ungelesenen E-Mail Nachrichten vorhanden ") # Anzeige auf Kommandozeile zu Kontrolle
                          print("------------------------------------------------------------------------------")
                          print("")
-                         Uhr.ShowText("+++ Keine ungelesenen E-Mail Nachrichten vorhanden. +++")
+                       # Uhr.ShowText("+++ Keine ungelesenen E-Mail Nachrichten vorhanden. +++") # (Optional)
+                       
+                # Check FritzBox auf Anzahl verpasste Anrufe (gestern und Heute)
+                if CheckMissedFBCalls == "on": 
+                  FBCheckInterval = FBCheckInterval - 1
+                  print("--------------------------------------------------------------------------------------")
+                  print("Textausgabe in Kommandozeile - Anzeige der Anzahl verpasster Anrufe in "+str(FBCheckInterval)+" Minute(n)") # Anzeige auf Kommandozeile zu Kontrolle
+                  print("--------------------------------------------------------------------------------------")
+                  if FBCheckInterval == 0:
+                      FBCheckInterval = CurrentFBCheckInterval + 1
+                      MissedCallCount = FritzBoxMissedCallCount(FritzBoxIP,FritzBoxPassword)
+                      if MissedCallCount > 0:
+                         Uhr.ShowText("+++ Anzahl verpasster Anrufe: "+str(MissedCallCount)+" +++")
+                      else:
+                         print("")
+                         print("-----------------------------------------------------------------")
+                         print("Textausgabe in Kommandozeile - Keine verpassten Anrufe vorhanden ") # Anzeige auf Kommandozeile zu Kontrolle
+                         print("-----------------------------------------------------------------")
+                         print("") 
+                         # Uhr.ShowText("Keine verpassten Anrufe vorhanden") # (Optional)
+                         
+                # weitere Aktionen
+                
              else:
                print("Textausgabe - *** Internetstatus: Offline *** ")  
                Uhr.ShowText("+++ Internetstatus: Offline +++")
