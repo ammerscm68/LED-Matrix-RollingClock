@@ -5,10 +5,11 @@
 # https://github.com/rm-hull/luma.led_matrix/blob/master/examples/silly_clock.py
 
 import threading
-import os, sys, signal
+import sys, signal
+from gpiozero import CPUTemperature
+import vlc  # pip3 install python-vlc
 import Feiertage as bf
 import time
-#import pygame
 import RPi.GPIO as GPIO
 from datetime import date, datetime
 from PIL import Image
@@ -450,16 +451,21 @@ class RollingClock(threading.Thread):
          pass
         
     def PlayHourSound(self,SFile,Volume,Mode):
-      if Mode == "on":  
-        SoundFile = Path(SFile)
-        if SoundFile.is_file():
-           os.system("omxplayer --no-keys --no-osd -o local --vol "+Volume+" "+SFile+" &")
-           time.sleep(5) # 5 sekunden bis zur nächsten Ausgabe warten
-           return True
-        else: 
-           return False
-      else:
-           return False
+        try:   
+          if Mode == "on":  
+            SoundFile = Path(SFile)
+            if SoundFile.is_file():
+               p = vlc.MediaPlayer(SFile)
+               p.audio_set_volume(Volume)
+               p.play()    
+               time.sleep(5) # 5 sekunden bis zur nächsten Ausgabe warten
+               return True
+            else: 
+               return False
+          else:
+               return False
+        except:
+               return False
         
     def CountDown(self,EYear, EMonth, EDay, EventText):
       try:
@@ -531,10 +537,9 @@ def HolidayText(country_code):
         return hdt
     
 def Measure_CPU_Temp():
-    temp = os.popen("vcgencmd measure_temp").readline()
-    int_temp = int(float((temp.replace("temp=","").replace("'C","").replace("\n",""))))
-    return int_temp
-
+    cpu = CPUTemperature() # CPU-Temperatur
+    return int(cpu.temperature)    
+    
 def time_in_range(start, end, x):
     if start <= end:
         return start <= x <= end
@@ -558,14 +563,14 @@ if __name__ == "__main__":
     #----------------------------------------------------------------------------------------------------
     
     # ScrollIn und ScrollOut der Anzeige festlegen
-    ClockScrollIn = "V" # V = Vertical  H = Horizontal   Default ist "V"
-    ClockScrollOut = "V" # V = Vertical  H = Horizontal   Default ist "V"
+    ClockScrollIn = "H" # V = Vertical  H = Horizontal   Default ist "V"
+    ClockScrollOut = "H" # V = Vertical  H = Horizontal   Default ist "V"
     
     # PushButton-Setup
     PushButtonGPIOPort= 21 # Pin-Nummer (nicht GPIO-Nummer) auf GPIO-Leiste gegen Ground
     LongPushTime= 1 # Länge in Sekunden bis Event
     PushButtonDePrell = 0.03 # Entprellzeit für den PushButton (sollte standardmäßig so bleiben) Default = 0.03
-    PushButtonStatus = "NotActive" # PushButton aktivieren oder deaktivieren
+    PushButtonStatus = "Active" # PushButton aktivieren oder deaktivieren
     # wenn PushButton nicht vorhanden "NotActive" = deaktiviert  -  Wenn PushButton vorhanden "Active" = aktiviert)
     
     # weitere Einstellungen 
@@ -577,9 +582,9 @@ if __name__ == "__main__":
     DisplayContrastLow = 5 # geringer Displaycontrast
     
     # Geburtstagsgruß Datum
-    DateOfBirth = "07.03"
+    DateOfBirth = "17.03"
     
-    HDBL = "" # Feiertags Bundesland --> keine Angabe gibt nur die bundeseinheitlichen Feiertage aus (Bundesländer siehe unten) 
+    HDBL = "TH" # Feiertags Bundesland --> keine Angabe gibt nur die bundeseinheitlichen Feiertage aus (Bundesländer siehe unten) 
     
     AlertMaxCPUTemp = 70 # Alarm-Anzeige bei Temperatur von X Grad oder höher der CPU
     
@@ -587,24 +592,24 @@ if __name__ == "__main__":
     
     DateViewCount = 3 # Datum und Grüße nur alle X Minuten anzeigen
     
-    GhostMode = "off" # on = Geist wird um Mitternacht angezeigt off = Geist wird nicht um Mitternacht angezeigt
+    GhostMode = "on" # on = Geist wird um Mitternacht angezeigt off = Geist wird nicht um Mitternacht angezeigt
     
-    SoundMode = "off"  # on = beim Start und jede volle Stunde wird ein Sound ausgegeben (nur wenn Uhrzeit eingeblendet) off = kein Sound
+    SoundMode = "on"  # on = beim Start und jede volle Stunde wird ein Sound ausgegeben (nur wenn Uhrzeit eingeblendet) off = kein Sound
     StartSoundFile= "sound1.mp3" # Sound-Datei beim Start der Uhr
     HourSoundFile= "sound3.mp3" # Sound-Datei zu jeder vollen Stunde
     ShowClockSoundFile= "sound4.mp3" # Sound wenn die Uhr wieder eingeblendet wird
     AlarmClockSoundFile= "sound2.mp3" # Sound-Datei für Wecker
     AlarmClockCount = -1 # Wie oft soll der Sound für den Wecker ausgegeben werden (-1 = Wecker deaktiviert)
     AlarmClockTime = "06:00" # Wecker Uhrzeit (mit führender Null bei Uhrzeiten zischen 0 und 9 Uhr)
-    SoundVolume = "-2500"    # Sound-Lautstärke anpassen (-500 = -5dB)
+    SoundVolume = 40    # Sound-Lautstärke anpassen (Standard = 40)
     HourSoundFrom = 5 # Stunde ab wann der Sound jede volle Stunde abgespielt werden soll (Wenn Uhrzeit eingeblendet)
     HourSoundTo = 21 # Stunde bis wann der Sound jede volle Stunde abgespielt werden soll (Wenn Uhrzeit eingeblendet)
     
     # CountDown Daten
-    CDEventYear = 2099 # Jahr des Events
-    CDEventMonth = 1 # Monat des Events
+    CDEventYear = 2023 # Jahr des Events
+    CDEventMonth = 9 # Monat des Events
     CDEventDay = 1 # Tag des Events
-    CDEventText = "EventText" # Text für den CountDown
+    CDEventText = "25 Jahre Creditreform" # Text für den CountDown
     CDEventViewCount = -1 # alle X Minuten wird der CountDown-Zähler angezeigt (-1 = CountDown deaktiviert)
     
     # ********************************************************************************************************
@@ -691,7 +696,7 @@ if __name__ == "__main__":
     
     print("")
     print("-----------------------")
-    print("CPU-Temperatur: "+str(Measure_CPU_Temp())+" Grad")
+    print("CPU-Temperatur: "+str(CPUTemperature)+" Grad")
     print("-----------------------")
     print("")
     
@@ -731,7 +736,6 @@ if __name__ == "__main__":
     
     # Sound beim Starten der Uhr ausgeben wenn in Uhrzeitbereich
     if time_in_range(HourSoundFrom,HourSoundTo,StartTimeHour) == True:
-        print("------------------------------------------------------------------") 
         if Uhr.PlayHourSound(StartSoundFile, SoundVolume, SoundMode) == True:
             print("-------------------------------------------") 
             print("Soundausgabe- Start-Sound wurde ausgegeben ")

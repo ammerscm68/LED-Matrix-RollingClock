@@ -43,12 +43,12 @@ def ReadYoutubeSubscriberCounter():
         SubscriberText = data['items'][0]['statistics']['subscriberCount']
     except:
         SubscriberText = "???"
-    return "Mario's Kanal: " + SubscriberText + " Abonnenten"
+    return "Mario's YouTube-Kanal: " + SubscriberText + " Abonnenten"
 
 def ReadNews():
     try:
         NewsFeed = feedparser.parse("https://www.tagesschau.de/xml/rss2_https/")
-        NewsText = NewsFeed.entries[0].title+": "+NewsFeed.entries[0].content[1].value
+        NewsText = NewsFeed.entries[0].title+": "+NewsFeed.entries[0].description
         chars = {'ö':'oe','ä':'ae','ü':'ue','Ö':'Oe','Ä':'Ae','Ü':'Ue','ß':'ss','–':'-',' ':' ','§':'Paragraph'}
         for char in chars:
             NewsText = NewsText.replace(char,chars[char])
@@ -140,10 +140,11 @@ def BadWeatherNews(URL): # https://wettwarn.de/wettwarn_wetterwarnungen/warnregi
         chars = {'ö':'oe','ä':'ae','ü':'ue','Ö':'Oe','Ä':'Ae','Ü':'Ue','ß':'ss','–':'-',' ':' ','§':'Paragraph'}
         for char in chars:
             BadWeatherNewsText = BadWeatherNewsText.replace(char,chars[char])
-        if BadWeatherNewsText == "Keine Warnungen":
-           BadWeatherNewsText = "DWD WETTERWARNUNG: Keine Warnungen"
+        #print('----------------------')    
+        #print(BadWeatherNewsText)
+        #print('----------------------')
         if BadWeatherNewsText.startswith("DWD WETTERWARNUNG:"):
-           BadWeatherNewsText = BadWeatherNewsText.replace("DWD WETTERWARNUNG:", "Achtung Unwetterwarnung:") 
+           BadWeatherNewsText = BadWeatherNewsText.replace("DWD WETTERWARNUNG:", "Achtung Unwetterwarnung:")   
     except:
         BadWeatherNewsText = "Keine Unwetterwarnungen ???"
     return sub('[^abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890()?=/.%&:!, -]', '', BadWeatherNewsText)
@@ -220,31 +221,31 @@ if __name__ == "__main__":
     #----------------------------------------------------------------------------------------------------
     
     # ScrollIn und ScrollOut der Anzeige festlegen
-    ClockScrollIn = "V" # V = Vertical  H = Horizontal   Default ist "V"
-    ClockScrollOut = "V" # V = Vertical  H = Horizontal   Default ist "V"
+    ClockScrollIn = "H" # V = Vertical  H = Horizontal   Default ist "V"
+    ClockScrollOut = "H" # V = Vertical  H = Horizontal   Default ist "V"
     
     # PushButton-Setup
     PushButtonGPIOPort= 21 # Pin-Nummer (nicht GPIO-Nummer) auf GPIO-Leiste gegen Ground
     LongPushTime= 1 # Länge in Sekunden bis Event
     PushButtonDePrell = 0.03 # Entprellzeit für den PushButton (sollte standardmäßig so bleiben) - Default = 0.03
-    PushButtonStatus = "NotActive" # PushButton aktivieren oder deaktivieren
+    PushButtonStatus = "Active" # PushButton aktivieren oder deaktivieren
     # wenn PushButton nicht vorhanden "NotActive" = deaktiviert  -  Wenn PushButton vorhanden "Active" = aktiviert)
     
     # Wetternews und Telegram API Schlüssel
-    WeatherNewsAPIKey = "1234567890abcdefghijklmnopqrstuvwxyz" # Hier den eigenen API Key von OpenWheaterMAP eigeben
-    TelegramAPIKey= "1234567890:abcdefghijklmnopqrstuvwxyz" # Hier den "BOT-Token" des erstellten BOT's eingeben
+    WeatherNewsAPIKey = "4e9f18932bf4d0c5769e1620aef1059a" # Hier den eigenen API Key von OpenWheaterMAP eigeben
+    TelegramAPIKey= "1841386426:AAG5cwggfZ3zJl7a-IKDd2unvs7FEPPptk0" # Hier den "BOT-Token" des erstellten BOT's eingeben
     
     # Stadt für WetterNews
-    WheatherNewsCity= "Musterstadt" # Hier die gewünschte Stadt eingeben
+    WheatherNewsCity= "Erfurt" # Hier die gewünschte Stadt eingeben
     
     # RSS Feed URL für Unwetterwarnung --> hier als Beispiel Berlin
-    BadWeatherURL = "https://wettwarn.de/rss/bxx.rss" # hier findet Ihr eure Region oder Stadt : --> https://wettwarn.de/wettwarn_wetterwarnungen/warnregion_waehlen/
-    BadWeatherMode = "off" # on = Anzeige von Unwetterwarnung  off = keine Anzeige von Unwetterwarnungen
+    BadWeatherURL = "https://wettwarn.de/rss/efx.rss" # hier findet Ihr eure Region oder Stadt : --> https://wettwarn.de/wettwarn_wetterwarnungen/warnregion_waehlen/
+    BadWeatherMode = "on" # on = Anzeige von Unwetterwarnung  off = keine Anzeige von Unwetterwarnungen
     
     # weitere Einstellungen 
-    HideClockTimeHour = "23" # ab hier Uhr ausblenden (Stunde Uhrzeit --> ohne führende Null)   -->  -1  = Uhr nicht Ausblenden
+    HideClockTimeHour = "21" # ab hier Uhr ausblenden (Stunde Uhrzeit --> ohne führende Null)   -->  -1  = Uhr nicht Ausblenden
     ShowClockTimeHour = "6"  # ab hier Uhr wieder anzeigen (Stunde Uhrzeit --> ohne führende Null)
-    AutoShowClock = "off"     # on = Uhr Einblenden bei Sonnenaufgang   - off = Uhr nur Einblenden nach bestimmter Zeit (ShowClockTimeHour)
+    AutoShowClock = "on"     # on = Uhr Einblenden bei Sonnenaufgang   - off = Uhr nur Einblenden nach bestimmter Zeit (ShowClockTimeHour)
     # (Wenn "WetterNews" deaktiviert ist , dann ist AutoShowClock = "off")
     
     DisplayContrastHigh = 16 # Voller Displaycontrast
@@ -254,9 +255,9 @@ if __name__ == "__main__":
     MinDisplayContrastHourSummer = 19 # Ab hier niedriger Displaycontrast (Stunde Uhrzeit - im Sommer)
     
     # Geburtstagsgruß Datum
-    DateOfBirth = "07.03"
+    DateOfBirth = "17.03"
     
-    HDBL = "" # Feiertags Bundesland --> keine Angabe gibt nur die bundeseinheitlichen Feiertage aus (Bundesländer siehe unten) 
+    HDBL = "TH" # Feiertags Bundesland --> keine Angabe gibt nur die bundeseinheitlichen Feiertage aus (Bundesländer siehe unten) 
     
     AlertMaxCPUTemp = 70 # Alarm-Anzeige bei Temperatur von X Grad oder höher der CPU
     
@@ -268,52 +269,52 @@ if __name__ == "__main__":
     
     WaitTimeforOnline = 8 # Alle X sekunden "Internetstatus: Offline" anzeigen wenn keine Internetverbindung
     
-    GhostMode = "off" # on = Geist wird um Mitternacht angezeigt off = Geist wird nicht um Mitternacht angezeigt
+    GhostMode = "on" # on = Geist wird um Mitternacht angezeigt off = Geist wird nicht um Mitternacht angezeigt
     
-    SoundMode = "off"  # on = beim Start und jede volle Stunde wird ein Sound ausgegeben (nur wenn Uhrzeit eingeblendet) off = kein Sound
+    SoundMode = "on"  # on = beim Start und jede volle Stunde wird ein Sound ausgegeben (nur wenn Uhrzeit eingeblendet) off = kein Sound
     StartSoundFile= "sound1.mp3" # Sound-Datei beim Start der Uhr
     HourSoundFile= "sound3.mp3" # Sound-Datei zu jeder vollen Stunde
     ShowClockSoundFile= "sound4.mp3" # Sound wenn die Uhr wieder eingeblendet wird
     AlarmClockSoundFile= "sound2.mp3" # Sound-Datei für Wecker
     AlarmClockCount = -1 # Wie oft soll der Sound für den Wecker ausgegeben werden (-1 = Wecker deaktiviert)
     AlarmClockTime = "06:00" # Wecker Uhrzeit (mit führender Null bei Uhrzeiten zischen 0 und 9 Uhr)
-    SoundVolume = "-2500"    # Sound-Lautstärke anpassen  (-500 = -5dB)
+    SoundVolume = 40    # Sound-Lautstärke anpassen  (Standard = 40)
     HourSoundFrom = 5 # Stunde ab wann der Sound jede volle Stunde abgespielt werden soll (Wenn Uhrzeit eingeblendet)
     HourSoundTo = 21 # Stunde bis wann der Sound jede volle Stunde abgespielt werden soll (Wenn Uhrzeit eingeblendet)
     
     # CountDown Daten
-    CDEventYear = 2099 # Jahr des Events
-    CDEventMonth = 1 # Monat des Events
+    CDEventYear = 2023 # Jahr des Events
+    CDEventMonth = 9 # Monat des Events
     CDEventDay = 1 # Tag des Events
-    CDEventText = "Event Text" # Text für den CountDown
-    CDEventViewCount = -1 # alle X Minuten wird der CountDown-Zähler angezeigt (-1 = CountDown deaktiviert)
+    CDEventText = "25 Jahre Creditreform" # Text für den CountDown
+    CDEventViewCount = 10 # alle X Minuten wird der CountDown-Zähler angezeigt (-1 = CountDown deaktiviert)
     
     # **** Prüfung auf ungelesene E-Mail Nachrichten ****
-    CurrentMailCheckInterval = -1 # Prüfung alle X Minuten  -1 = Prüfung aller Konten deaktiviert - Empfehlung: 15
+    CurrentMailCheckInterval = 16 # Prüfung alle X Minuten  -1 = Prüfung aller Konten deaktiviert - Empfehlung: 15
     # 1. Konto
-    CheckMode1 = "off" # on = aktiviert  off = deaktiviert
-    MailAccountName1 = "Konto 1" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar - z.Bsp. Info-Konto (kein @-Zeichen verwenden)
-    MailServername1 = "" # IMAP Servername
-    MailUserName1 = "" # Benutzername Konto 1
-    MailPassword1 = "" # Passwort Konto 1
+    CheckMode1 = "on" # on = aktiviert  off = deaktiviert
+    MailAccountName1 = "M.Ammerschuber-Konto" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar - z.Bsp. Info-Konto (kein @-Zeichen verwenden)
+    MailServername1 = "w00cd64c.kasserver.com" # IMAP Servername
+    MailUserName1 = "m01c2c49" # Benutzername Konto 1
+    MailPassword1 = "ncc_4077" # Passwort Konto 1
     # 2. Konto
-    CheckMode2 = "off" # on = aktiviert  off = deaktiviert
-    MailAccountName2 = "Konto 2" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar z.Bsp. Kontakt-Konto (kein @-Zeichen verwenden)
-    MailServername2 = "" # IMAP Servername
-    MailUserName2 = "" # Benutzername Konto 2
-    MailPassword2 = "" # Passwort Konto 2
+    CheckMode2 = "on" # on = aktiviert  off = deaktiviert
+    MailAccountName2 = "Mail-Konto" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar z.Bsp. Kontakt-Konto (kein @-Zeichen verwenden)
+    MailServername2 = "w00cd64c.kasserver.com" # IMAP Servername
+    MailUserName2 = "m0309b68" # Benutzername Konto 2
+    MailPassword2 = "ncc_4077" # Passwort Konto 2
     # 3. Konto
-    CheckMode3 = "off" # on = aktiviert  off = deaktiviert
-    MailAccountName3 = "Konto 3" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar z.Bsp. Bestellung-Konto (kein @-Zeichen verwenden)
-    MailServername3 = "" # IMAP Servername
-    MailUserName3 = "" # Benutzername Konto 3
-    MailPassword3 = "" # Passwort Konto 3
+    CheckMode3 = "on" # on = aktiviert  off = deaktiviert
+    MailAccountName3 = "CrefoCall-Konto" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar z.Bsp. Bestellung-Konto (kein @-Zeichen verwenden)
+    MailServername3 = "w00cd64c.kasserver.com" # IMAP Servername
+    MailUserName3 = "m03a3470" # Benutzername Konto 3
+    MailPassword3 = "mash_1701" # Passwort Konto 3
     
     # Anzahl verpasster Anrufe über eine FritzBox
-    CheckMissedFBCalls = "off" # on = aktiviert  off = deaktiviert
+    CheckMissedFBCalls = "on" # on = aktiviert  off = deaktiviert
     FritzBoxIP = "192.168.178.1" # Default ist "192.168.178.1"
-    FritzBoxPassword = "" # Fritzbox Passwort
-    CurrentFBCheckInterval = 10 # Prüfung auf verpasste Anrufe alle X Minuten 
+    FritzBoxPassword = "ncc_74656" # Fritzbox Passwort
+    CurrentFBCheckInterval = 8 # Prüfung auf verpasste Anrufe alle X Minuten 
     
     # ********************************************************************************************************
     # ********************************************************************************************************
@@ -556,7 +557,6 @@ if __name__ == "__main__":
     
     # Sound beim Starten der Uhr ausgeben wenn in Uhrzeitbereich
     if time_in_range(HourSoundFrom,HourSoundTo,StartTimeHour) == True:
-        print("------------------------------------------------------------------") 
         if Uhr.PlayHourSound(StartSoundFile, SoundVolume, SoundMode) == True:
             print("-------------------------------------------") 
             print("Soundausgabe- Start-Sound wurde ausgegeben ")
@@ -871,7 +871,13 @@ if __name__ == "__main__":
                 # show feed (Unwetter News)
                 if BadWeatherMode == 'on' : # on = Unwetterwarnung wird angezeigt
                     BadWeatherText = BadWeatherNews(BadWeatherURL)
-                    if BadWeatherText.find("Keine Warnungen") != -1:
+                    #print("-----------------------------------------------------------------")
+                    #print("Unwettertext: "+BadWeatherText) # Test-Anzeige auf Kommandozeile zu Kontrolle
+                    #print("-----------------------------------------------------------------")   
+                    if (BadWeatherText.find("Keine Warnungen") != -1) or \
+                       (BadWeatherText.find("FROST") != -1) or \
+                       (BadWeatherText.find("STURMBOeEN") != -1) or \
+                       (BadWeatherText.find("LEICHTER") != -1) : # bei diesen Strings keine Unwetterwarnung
                       print("-----------------------------------------------------------------")
                       print("Textausgabe in Kommandozeile - *** keine neuen Unwetter-News *** ") # Anzeige auf Kommandozeile zu Kontrolle
                       print("-----------------------------------------------------------------")     
