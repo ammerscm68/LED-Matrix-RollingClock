@@ -1,6 +1,10 @@
 # LED-Matrix-RollingClock
 LED-Matrix RollingClock with Python and a Raspberry PI
 
+*02.01.2024*
+BugFix Feiertage.py
+
+
 In the course of the "handicrafts" I expanded and improved
 the programming of the "RollingClock" a little.
 
