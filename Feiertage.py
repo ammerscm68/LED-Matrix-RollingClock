@@ -342,7 +342,6 @@ class Holidays:
         """ Berechnung Ostersonntag nach Lichtenberg """
         """ (http://de.wikipedia.org/wiki/Gau%C3%9Fsche_Osterformel)"""
         """(Korrektur wenn Ostersonntag nach dem 25.April"""
-
         a = self.year % 19
         k = self.year // 100
         m = 15 + (3 * k + 3) // 4 - (8 * k + 13) // 25
@@ -354,10 +353,14 @@ class Holidays:
         oe = 7 - (og - sz) % 7
         os = (og + oe)
         month, day = divmod(os, 31)
-        month = month + 3
+        if day == 0:
+           day = 31
+           month = month + 2
+        else:   
+           month = month + 3
         easter_day = datetime.date(self.year, month, day)
         return easter_day
-
-# holidays = Holidays(2021, 'TH')
+    
+# holidays = Holidays(2025, 'TH')
 # liste = holidays.get_holiday_list()
 # print(liste)

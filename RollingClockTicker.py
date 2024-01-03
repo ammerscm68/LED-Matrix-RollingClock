@@ -47,7 +47,7 @@ def ReadYoutubeSubscriberCounter():
 
 def ReadNews():
     try:
-        NewsFeed = feedparser.parse("https://www.tagesschau.de/xml/rss2_https/")
+        NewsFeed = feedparser.parse("https://www.tagesschau.de/infoservices/alle-meldungen-100~rss2.xml")
         NewsText = NewsFeed.entries[0].title+": "+NewsFeed.entries[0].description
         chars = {'ö':'oe','ä':'ae','ü':'ue','Ö':'Oe','Ä':'Ae','Ü':'Ue','ß':'ss','–':'-',' ':' ','§':'Paragraph'}
         for char in chars:
@@ -283,10 +283,10 @@ if __name__ == "__main__":
     HourSoundTo = 21 # Stunde bis wann der Sound jede volle Stunde abgespielt werden soll (Wenn Uhrzeit eingeblendet)
     
     # CountDown Daten
-    CDEventYear = 2023 # Jahr des Events
+    CDEventYear = 2033 # Jahr des Events
     CDEventMonth = 9 # Monat des Events
     CDEventDay = 1 # Tag des Events
-    CDEventText = "25 Jahre Creditreform" # Text für den CountDown
+    CDEventText = "zur Rente" # Text für den CountDown
     CDEventViewCount = 10 # alle X Minuten wird der CountDown-Zähler angezeigt (-1 = CountDown deaktiviert)
     
     # **** Prüfung auf ungelesene E-Mail Nachrichten ****
