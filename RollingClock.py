@@ -582,7 +582,7 @@ if __name__ == "__main__":
     DisplayContrastLow = 5 # geringer Displaycontrast
     
     # Geburtstagsgruß Datum
-    DateOfBirth = "17.03"
+    DateOfBirth = "27.04"
     
     HDBL = "TH" # Feiertags Bundesland --> keine Angabe gibt nur die bundeseinheitlichen Feiertage aus (Bundesländer siehe unten) 
     
@@ -606,10 +606,10 @@ if __name__ == "__main__":
     HourSoundTo = 21 # Stunde bis wann der Sound jede volle Stunde abgespielt werden soll (Wenn Uhrzeit eingeblendet)
     
     # CountDown Daten
-    CDEventYear = 2023 # Jahr des Events
+    CDEventYear = 2024 # Jahr des Events
     CDEventMonth = 9 # Monat des Events
     CDEventDay = 1 # Tag des Events
-    CDEventText = "25 Jahre Creditreform" # Text für den CountDown
+    CDEventText = "25 Jahre" # Text für den CountDown
     CDEventViewCount = -1 # alle X Minuten wird der CountDown-Zähler angezeigt (-1 = CountDown deaktiviert)
     
     # ********************************************************************************************************
