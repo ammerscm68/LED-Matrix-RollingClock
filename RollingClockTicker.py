@@ -232,11 +232,11 @@ if __name__ == "__main__":
     # wenn PushButton nicht vorhanden "NotActive" = deaktiviert  -  Wenn PushButton vorhanden "Active" = aktiviert)
     
     # Wetternews und Telegram API Schlüssel
-    WeatherNewsAPIKey = "4e9f18932bf4d0c5769e1620aef1059a" # Hier den eigenen API Key von OpenWheaterMAP eigeben
-    TelegramAPIKey= "1841386426:AAG5cwggfZ3zJl7a-IKDd2unvs7FEPPptk0" # Hier den "BOT-Token" des erstellten BOT's eingeben
+    WeatherNewsAPIKey = "4e9f18945af4d0c5769e1620arr1059a" # Hier den eigenen API Key von OpenWheaterMAP eigeben
+    TelegramAPIKey= "1844486426:AAG5cwqqgZ3zJl7a-IKDd2unvs7FEPPptk0" # Hier den "BOT-Token" des erstellten BOT's eingeben
     
     # Stadt für WetterNews
-    WheatherNewsCity= "Erfurt" # Hier die gewünschte Stadt eingeben
+    WheatherNewsCity= "Berlin" # Hier die gewünschte Stadt eingeben
     
     # RSS Feed URL für Unwetterwarnung --> hier als Beispiel Berlin
     BadWeatherURL = "https://wettwarn.de/rss/efx.rss" # hier findet Ihr eure Region oder Stadt : --> https://wettwarn.de/wettwarn_wetterwarnungen/warnregion_waehlen/
@@ -255,7 +255,7 @@ if __name__ == "__main__":
     MinDisplayContrastHourSummer = 19 # Ab hier niedriger Displaycontrast (Stunde Uhrzeit - im Sommer)
     
     # Geburtstagsgruß Datum
-    DateOfBirth = "17.03"
+    DateOfBirth = "28.02"
     
     HDBL = "TH" # Feiertags Bundesland --> keine Angabe gibt nur die bundeseinheitlichen Feiertage aus (Bundesländer siehe unten) 
     
@@ -283,7 +283,7 @@ if __name__ == "__main__":
     HourSoundTo = 21 # Stunde bis wann der Sound jede volle Stunde abgespielt werden soll (Wenn Uhrzeit eingeblendet)
     
     # CountDown Daten
-    CDEventYear = 2033 # Jahr des Events
+    CDEventYear = 2043 # Jahr des Events
     CDEventMonth = 9 # Monat des Events
     CDEventDay = 1 # Tag des Events
     CDEventText = "zur Rente" # Text für den CountDown
@@ -293,27 +293,27 @@ if __name__ == "__main__":
     CurrentMailCheckInterval = 16 # Prüfung alle X Minuten  -1 = Prüfung aller Konten deaktiviert - Empfehlung: 15
     # 1. Konto
     CheckMode1 = "on" # on = aktiviert  off = deaktiviert
-    MailAccountName1 = "M.Ammerschuber-Konto" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar - z.Bsp. Info-Konto (kein @-Zeichen verwenden)
-    MailServername1 = "w00cd64c.kasserver.com" # IMAP Servername
-    MailUserName1 = "m01c2c49" # Benutzername Konto 1
-    MailPassword1 = "ncc_4077" # Passwort Konto 1
+    MailAccountName1 = "" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar - z.Bsp. Info-Konto (kein @-Zeichen verwenden)
+    MailServername1 = "" # IMAP Servername
+    MailUserName1 = "" # Benutzername Konto 1
+    MailPassword1 = "" # Passwort Konto 1
     # 2. Konto
     CheckMode2 = "on" # on = aktiviert  off = deaktiviert
-    MailAccountName2 = "Mail-Konto" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar z.Bsp. Kontakt-Konto (kein @-Zeichen verwenden)
-    MailServername2 = "w00cd64c.kasserver.com" # IMAP Servername
-    MailUserName2 = "m0309b68" # Benutzername Konto 2
-    MailPassword2 = "ncc_4077" # Passwort Konto 2
+    MailAccountName2 = "" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar z.Bsp. Kontakt-Konto (kein @-Zeichen verwenden)
+    MailServername2 = "" # IMAP Servername
+    MailUserName2 = "" # Benutzername Konto 2
+    MailPassword2 = "" # Passwort Konto 2
     # 3. Konto
     CheckMode3 = "on" # on = aktiviert  off = deaktiviert
-    MailAccountName3 = "CrefoCall-Konto" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar z.Bsp. Bestellung-Konto (kein @-Zeichen verwenden)
-    MailServername3 = "w00cd64c.kasserver.com" # IMAP Servername
-    MailUserName3 = "m03a3470" # Benutzername Konto 3
-    MailPassword3 = "mash_1701" # Passwort Konto 3
+    MailAccountName3 = "" # Dient nur zur Anzeige damit man weis welches Konto gemeint ist - Name ist frei wählbar z.Bsp. Bestellung-Konto (kein @-Zeichen verwenden)
+    MailServername3 = "" # IMAP Servername
+    MailUserName3 = "" # Benutzername Konto 3
+    MailPassword3 = "" # Passwort Konto 3
     
     # Anzahl verpasster Anrufe über eine FritzBox
     CheckMissedFBCalls = "on" # on = aktiviert  off = deaktiviert
     FritzBoxIP = "192.168.178.1" # Default ist "192.168.178.1"
-    FritzBoxPassword = "ncc_74656" # Fritzbox Passwort
+    FritzBoxPassword = "" # Fritzbox Passwort
     CurrentFBCheckInterval = 8 # Prüfung auf verpasste Anrufe alle X Minuten 
     
     # ********************************************************************************************************
