@@ -2,6 +2,7 @@
 LED-Matrix RollingClock with Python and a Raspberry PI
 
 **09.11.2025** <br>
+File "RollingClock.py" and "RollingClockTicker.py" adapted for Raspberry Pi OS "Trixie" <br>
 A Raspberry Pi OS "Trixie" Image (32GB) is available upon request.  <br>
 Everything is pre-installed.  <br>
 <br>
