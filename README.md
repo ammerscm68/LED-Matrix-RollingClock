@@ -1,6 +1,10 @@
 # LED-Matrix-RollingClock
 LED-Matrix RollingClock with Python and a Raspberry PI
 
+**09.11.2025** <br>
+A Raspberry Pi OS "Trixie" Image (32GB) is available upon request.  <br>
+Everything is pre-installed.  <br>
+<br>
 **03.01.2024** <br>
 BugFix "Feiertage.py" and "RollingClockTicker.py" <br>
 
