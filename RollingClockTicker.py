@@ -236,7 +236,7 @@ if __name__ == "__main__":
     TelegramAPIKey= "1844486426:AAG5cwqqgZ3zJl7a-IKDd2unvs7FEPPptk0" # Hier den "BOT-Token" des erstellten BOT's eingeben
     
     # Stadt für WetterNews
-    WheatherNewsCity= "Berlin" # Hier die gewünschte Stadt eingeben
+    WheatherNewsCity= "Erfurt" # Hier die gewünschte Stadt eingeben
     
     # RSS Feed URL für Unwetterwarnung --> hier als Beispiel Berlin
     BadWeatherURL = "https://wettwarn.de/rss/efx.rss" # hier findet Ihr eure Region oder Stadt : --> https://wettwarn.de/wettwarn_wetterwarnungen/warnregion_waehlen/
@@ -278,13 +278,13 @@ if __name__ == "__main__":
     AlarmClockSoundFile= "sound2.mp3" # Sound-Datei für Wecker
     AlarmClockCount = -1 # Wie oft soll der Sound für den Wecker ausgegeben werden (-1 = Wecker deaktiviert)
     AlarmClockTime = "06:00" # Wecker Uhrzeit (mit führender Null bei Uhrzeiten zischen 0 und 9 Uhr)
-    SoundVolume = 40    # Sound-Lautstärke anpassen  (Standard = 40)
+    SoundVolume = 200    # Sound-Lautstärke anpassen  (Standard = 100)
     HourSoundFrom = 5 # Stunde ab wann der Sound jede volle Stunde abgespielt werden soll (Wenn Uhrzeit eingeblendet)
     HourSoundTo = 21 # Stunde bis wann der Sound jede volle Stunde abgespielt werden soll (Wenn Uhrzeit eingeblendet)
     
     # CountDown Daten
-    CDEventYear = 2043 # Jahr des Events
-    CDEventMonth = 9 # Monat des Events
+    CDEventYear = 2033 # Jahr des Events
+    CDEventMonth = 5 # Monat des Events
     CDEventDay = 1 # Tag des Events
     CDEventText = "zur Rente" # Text für den CountDown
     CDEventViewCount = 10 # alle X Minuten wird der CountDown-Zähler angezeigt (-1 = CountDown deaktiviert)
@@ -313,8 +313,8 @@ if __name__ == "__main__":
     # Anzahl verpasster Anrufe über eine FritzBox
     CheckMissedFBCalls = "on" # on = aktiviert  off = deaktiviert
     FritzBoxIP = "192.168.178.1" # Default ist "192.168.178.1"
-    FritzBoxPassword = "" # Fritzbox Passwort
-    CurrentFBCheckInterval = 8 # Prüfung auf verpasste Anrufe alle X Minuten 
+    FritzBoxPassword = "mash_1701_74656" # Fritzbox Passwort
+    CurrentFBCheckInterval = 60 # Prüfung auf verpasste Anrufe alle X Minuten 
     
     # ********************************************************************************************************
     # ********************************************************************************************************

@@ -455,10 +455,33 @@ class RollingClock(threading.Thread):
           if Mode == "on":  
             SoundFile = Path(SFile)
             if SoundFile.is_file():
-               p = vlc.MediaPlayer(SFile)
-               p.audio_set_volume(Volume)
-               p.play()    
+               # VLC Instanz und MediaPlayer anlegen
+               instance = vlc.Instance()
+               player = instance.media_player_new()
+               player.audio_set_volume(Volume) # Lautstärke
+               # Media setzen
+               media = instance.media_new(SoundFile)
+               player.set_media(media)
+               # Equalizer erstellen
+               equalizer = vlc.AudioEqualizer()
+               # Mehrere Frequenzbänder anpassen (Beispiel)
+               equalizer.set_amp_at_index(0, 10)  # 60 Hz  +5 dB - Min/Max: -20 /+20
+               equalizer.set_amp_at_index(1, 10)  # 170 Hz +3 dB - Min/Max: -20 /+20
+               equalizer.set_amp_at_index(2, -10) # 310 Hz -2 dB - Min/Max: -20 /+20
+               equalizer.set_amp_at_index(3, -10) # 600 Hz -2 dB - Min/Max: -20 /+20
+               equalizer.set_amp_at_index(4, -10) # 1 kHz -2 dB  - Min/Max: -20 /+20
+               equalizer.set_amp_at_index(5, -10) # 3 kHz -2 dB  - Min/Max: -20 /+20
+               equalizer.set_amp_at_index(6, -10) # 6 kHz -2 dB  - Min/Max: -20 /+20
+               equalizer.set_amp_at_index(7, -10) # 12 kHz -2 dB - Min/Max: -20 /+20
+               equalizer.set_amp_at_index(8, -10) # 14 kHz -2 dB - Min/Max: -20 /+20
+               equalizer.set_amp_at_index(9, 20) # 16 kHz -2 dB  - Min/Max: -20 /+20
+               # Equalizer auf den Player anwenden
+               player.set_equalizer(equalizer)
+               # Wiedergabe starten
+               player.play()
                time.sleep(5) # 5 sekunden bis zur nächsten Ausgabe warten
+               # Wiedergabe stoppen
+               player.stop() 
                return True
             else: 
                return False
@@ -601,14 +624,14 @@ if __name__ == "__main__":
     AlarmClockSoundFile= "sound2.mp3" # Sound-Datei für Wecker
     AlarmClockCount = -1 # Wie oft soll der Sound für den Wecker ausgegeben werden (-1 = Wecker deaktiviert)
     AlarmClockTime = "06:00" # Wecker Uhrzeit (mit führender Null bei Uhrzeiten zischen 0 und 9 Uhr)
-    SoundVolume = 40    # Sound-Lautstärke anpassen (Standard = 40)
+    SoundVolume = 200    # Sound-Lautstärke anpassen (Standard = 100)
     HourSoundFrom = 5 # Stunde ab wann der Sound jede volle Stunde abgespielt werden soll (Wenn Uhrzeit eingeblendet)
     HourSoundTo = 21 # Stunde bis wann der Sound jede volle Stunde abgespielt werden soll (Wenn Uhrzeit eingeblendet)
     
     # CountDown Daten
-    CDEventYear = 2024 # Jahr des Events
-    CDEventMonth = 9 # Monat des Events
-    CDEventDay = 1 # Tag des Events
+    CDEventYear = 2033 # Jahr des Events
+    CDEventMonth = 3 # Monat des Events
+    CDEventDay = 17 # Tag des Events
     CDEventText = "25 Jahre" # Text für den CountDown
     CDEventViewCount = -1 # alle X Minuten wird der CountDown-Zähler angezeigt (-1 = CountDown deaktiviert)
     
